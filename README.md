@@ -24,22 +24,4 @@ The software requires two sets of input files. There should be a set of text fil
 
 ### Stimulus design
 
-1. For the random stimulus order (days #0 and #5):
-
-   * there are 4 difference choices of a 2 sec duration stimulus 
-     * movie clip A 
-     * movie clip B 
-     * movie clip C 
-     * a constant grey screen, X
-   * these will be displayed in a randomized order.
-   * this order will be exactly the same on day #0 and day #5. 
-   * there will be 525 repeats of each of the 4 stimuli.
-
-
-2. For the sequence stimulus order (day #1 – #4):
-
-   * the 3 movie clips are shown in the same repeated order, ABC, for 50 minutes. 
-   * this will result in 500 repeats of this movie clip sequence. 
-   * in the last 20 minutes, the stimuli will be shown in a random order with the grey screen intermixed, as on days #0 and #5
-   * a different random sequence will be chosen and kept the same across days #1 – #4.
-   * this will result in 150 repeats of each of these 4 stimuli.
+To be filled
