@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 # Sample 3D array (X, Y, Time) representing the movie
-path = './data/movie_clip_C.npy'
+path = './data/bar_frame_du.npy'
 movie_array = np.load(path)
 
 # Function to update the displayed frame

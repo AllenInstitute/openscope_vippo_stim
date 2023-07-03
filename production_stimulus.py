@@ -1,27 +1,8 @@
 # -*- coding: utf-8 -*-
 # Stimulus design
-#
-# 1. For the random stimulus order (days #0 and #5):
-#
-#     - there are 4 difference choices of a 2 sec duration stimulus
-#       – movie clip A
-#       – movie clip B
-#       – movie clip C
-#       – a constant grey screen, X
-#
-#     - these will be displayed in a randomized order.
-#     - this order will be exactly the same on day #0 and day #5.
-#     - there will be 525 repeats of each of the 4 stimuli.
-#
-# 2. For the sequence stimulus order (day #1 – #4):
-#
-#     - the 3 movie clips are shown in the same repeated order, ABC, for 50 minutes.
-#     - this will result in 500 repeats of this movie clip sequence.
-#     - in the last 20 minutes, the stimuli will be shown in a random order with the grey screen intermixed, as on days
-#       #0 and #5
-#     - a different random sequence will be chosen and kept the same across days #1 – #4.
-#     - this will result in 150 repeats of each of these 4 stimuli.
+# This script is used to generate the stimulus for the vippo project.
 
+import psychopy.visual
 import camstim
 from camstim import Stimulus, SweepStim, Foraging, Window, Warp, MovieStim
 import os
@@ -31,43 +12,43 @@ from psychopy import monitors
 import argparse
 import logging
 
-def make_movie_stimulus(movie_paths, order, window):
+def make_movie_stimulus(movie_paths, window):
     """Generate a Stimulus that plays a series of movie clips in a specified order."""
 
     # Convert the order into a list of display sequence tuples. There should be one display sequence list per movie
     # clip. Each display sequence list contains a set of tuples of the form (start_second, stop_second). Theses tuples
     # define the start and stop time for when to play the clip and are determined by the order vector
-    all_starts = np.arange(0, 2 * len(order), 2).astype(float)
     display_sequences = []
-    for i in np.unique(order):
-        display_sequences.append(list(zip(all_starts[order == i], all_starts[order == i] + 2.0)))
-
-    # Load each movie clip into its own MovieStim object. The display sequence will be set later so the clips play
-    # in the correct order.
+    current_time = 0.0
     stims = []
-    for i in np.unique(order):
 
-        # If the order index is less than the number of movie clips, load the movie clip.
-        if i < len(movie_paths):
+    for local_path in movie_paths:
+        local_movie = np.load(local_path)
+        array_size = local_movie.shape
 
-            # The movie clips should be 2 seconds long and should be played at 60 fps.
-            s = MovieStim(movie_path=movie_paths[i],
-                          window=window,
-                          frame_length=1.0 / 60.0,
-                          size=(1920, 1080),
-                          start_time=0.0,
-                          stop_time=None,
-                          flip_v=True, runs=len(display_sequences[i]))
-            s.set_display_sequence(display_sequences[i])
+        # Note here that the end time is calculated by dividing the array size by frame 
+        # rate (60 fps) and adding it to the current time. 
+        end_time = current_time + array_size[0] / 60.0
 
-            # Added to facilitate creating the NWB files
-            s.stim_path = movie_paths[i]
+        # You can change the runs parameter to change the number of times the movie clip is played.
+        s = MovieStim(movie_path=local_path,
+                        window=window,
+                        frame_length=1.0 / 60.0,
+                        size=(1920, 1080),
+                        start_time=0.0,
+                        stop_time=None,
+                        flip_v=True, runs=1)
+        s.set_display_sequence([(current_time, end_time)])
 
-        else:
-            raise ValueError("Order index is greater than the number of movie clips.")
+        # Added to facilitate creating the NWB files
+        s.stim_path = local_path
+
 
         stims.append(s)
+        current_time = end_time
 
+    # Note that pre_blank_sec and post_blank_sec are set to 0.0 by default.
+    # You can change these parameters to add a blank period before and after the movie clip. 
     stim = SweepStim(window,
                      stimuli=stims,
                      # pre_blank_sec=1,
@@ -120,25 +101,13 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    movie_clip_files = ['movie_clip_A.npy', 'movie_clip_B.npy', 'movie_clip_C.npy', 'gray.npy']
+    movie_clip_files = ['bar_frame_du_uint8.npy', 'bar_frame_ud_flicker_uint8.npy', 'bar_frame_ud_uint8.npy', 'bar_frames_lr_uint8.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
-    # Set of debug movie clip s to load. These videos have blinking letters to make clips easier to recognize.
-    # If they don't exist yet make sure to run gen_letter_videos.py first. Comment out if not debugging!
-    # movie_clip_files = ['data/A_blinking_video.npy', 'data/B_blinking_video.npy', 'data/C_blinking_video.npy',
-    #                     'data/gray.npy']
-    MOVIE_ZIP_URL = "https://tigress-web.princeton.edu/~dmturner/allen_stimulus/movie_clips.zip"
     for clip_path in movie_clip_files:
         if not os.path.exists(clip_path):
             raise ValueError("Movie clip file not found: {}. Make sure ".format(clip_path) +
-                            "to download from {} and extract them to the data folder.".format(MOVIE_ZIP_URL))
-
-
-    # Load the random movie clip order that were provided by Prof. Berry. Subtracts 1 from each value to
-    # convert from 1-indexed to 0-indexed.
-    order20 = (np.loadtxt(os.path.join(SESSION_PARAMS_movie_folder, 'stimulus_orderings', 'movie_order_random_20min.txt')).astype(int) - 1)
-    order50 = (np.loadtxt(os.path.join(SESSION_PARAMS_movie_folder, 'stimulus_orderings', 'movie_order_random_50min.txt')).astype(int) - 1)
-    order70 = (np.loadtxt(os.path.join(SESSION_PARAMS_movie_folder, 'stimulus_orderings', 'movie_order_random_70min.txt')).astype(int) - 1)
+                            "to download and place them in the data folder.")
 
     # create a monitor
     if monitor_name == 'testMonitor':
@@ -153,11 +122,6 @@ if __name__ == "__main__":
                     warp=Warp.Spherical
                     )
 
-    if SESSION_PARAMS_day == 0 or SESSION_PARAMS_day == 5:
-        order = order70
-    else:
-        order = np.concatenate((order50, order20))
-
-    ss = make_movie_stimulus(movie_clip_files, order, window)
+    ss = make_movie_stimulus(movie_clip_files, window)
 
     ss.run()
