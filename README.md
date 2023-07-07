@@ -24,4 +24,24 @@ The software requires two sets of input files. There should be a set of text fil
 
 ### Stimulus design
 
-To be filled
+1. Pilot stimuli:
+    + movie clip A: Left to right moving bar
+        - Low speed : 10 sec X 2
+        - Medium speed : 2 sec X 2
+        - High speed : 0.6 sec X 2
+    + movie clip B: Right to left moving bar
+        - Low speed : 10 sec X 2
+        - Medium speed : 2 sec X 2
+        - High speed : 0.6 sec X 2
+    + movie clip C: Up down moving bar
+        - Low speed : 10 sec X 2
+        - Medium speed : 2 sec X 2
+        - High speed : 0.6 sec X 2
+    + movie clip D: Rotating bar
+        - Low speed : 10 sec X 2
+        - Medium speed : 2 sec X 2
+        - High speed : 0.6 sec X 2
+    + movie clip E: Rich bar
+        - Flickering bar : 2 sec X 2
+        - Disco bar : 2sec X 2
+        - Movie of rat mving through the screen : 2sec X 2
