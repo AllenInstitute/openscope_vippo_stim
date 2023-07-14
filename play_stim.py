@@ -7,8 +7,7 @@ import numpy as np
 from psychopy import monitors
 import argparse
 import logging
-
-def make_movie_stimulus(movie_paths, window, repeats_array):
+def make_movie_stimulus(movie_paths, window, repeats):
     """Generate a Stimulus that plays a series of movie clips in a specified order."""
 
     # Convert the order into a list of display sequence tuples. There should be one display sequence list per movie
@@ -17,7 +16,7 @@ def make_movie_stimulus(movie_paths, window, repeats_array):
     display_sequences = []
     current_time = 0.0
     stims = []
-    counter = 0.0
+    counter = 0
     
     for local_path in movie_paths:
         local_movie = np.load(local_path)
@@ -25,7 +24,7 @@ def make_movie_stimulus(movie_paths, window, repeats_array):
 
         # Note here that the end time is calculated by dividing the array size by frame 
         # rate (60 fps) and adding it to the current time. 
-        end_time = current_time + array_size[0] / 60.0
+        end_time = current_time + array_size[0]*repeats[counter] / 60.0
 
         # You can change the runs parameter to change the number of times the movie clip is played.
         s = MovieStim(movie_path=local_path,
@@ -40,13 +39,12 @@ def make_movie_stimulus(movie_paths, window, repeats_array):
         # Added to facilitate creating the NWB files
         s.stim_path = local_path
 
-
+        counter = counter + 1
         stims.append(s)
         current_time = end_time
 
     # Note that pre_blank_sec and post_blank_sec are set to 0.0 by default.
     # You can change these parameters to add a blank period before and after the movie clip. 
-    counter = counter + 1
     stim = SweepStim(window,
                      stimuli=stims,
                      # pre_blank_sec=1,
@@ -98,8 +96,11 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = [,,]
-    movie_clip_files = ['LRRL_.npy', 'bar_frame_ud_flicker_uint8.npy', 'bar_frame_ud_uint8.npy', 'bar_frames_lr_uint8.npy']
+    repeats_array = [100,20,100,100,50,100,100,50,50,100]
+    movie_clip_files = ['LRRL_2_thin_bar.npy', 'LRRL_10_thick_bar.npy',
+                        'right_left_speed_2.0.npy', 'LRRL_2_thick_bar.npy',
+                       'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy',
+                       'CLRRL_2_green_green.npy','CLRRL_2_disco_disco.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
