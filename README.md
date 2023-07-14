@@ -47,6 +47,6 @@ The software requires two sets of input files. There should be a set of text fil
         - Movie of rat mving through the screen : 2sec X 2
 
 
-2. [data for stim generation](https://drive.google.com/drive/folders/14B9YlA_-adNRlzoag-XGWW37W226WOFP?usp=sharing)
+2. [Clips for stim generation](https://drive.google.com/drive/folders/14B9YlA_-adNRlzoag-XGWW37W226WOFP?usp=sharing)
 
         
