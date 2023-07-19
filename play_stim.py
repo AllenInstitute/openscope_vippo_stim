@@ -96,10 +96,10 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = [100,20,100,100,50,100,100,50,50,100]
-    movie_clip_files = ['LRRL_2_thin_bar.npy', 'LRRL_10_thick_bar.npy',
+    repeats_array = [100,20,100,100,50,100,100,50,50,50,50]
+    movie_clip_files = ['LRRL_2_thin_bar.np', 'LRRL_10_thick_bar.npy',
                         'right_left_speed_2.0.npy', 'LRRL_2_thick_bar.npy',
-                       'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy',
+                       'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy','curl_cw.npy','curl_acw.npy',
                        'CLRRL_2_green_green.npy','CLRRL_2_disco_disco.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
