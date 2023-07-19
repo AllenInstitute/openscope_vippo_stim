@@ -7,6 +7,187 @@ import numpy as np
 from psychopy import monitors
 import argparse
 import logging
+from camstim.misc import ImageStimNumpyuByte
+from psychopy import visual
+import pyglet
+GL = pyglet.gl
+
+class ColorImageStimNumpyuByte(ImageStimNumpyuByte):
+
+    '''Subclass of ImageStim which allows fast updates of numpy ubyte images,
+       bypassing all internal PsychoPy format conversions.
+    '''
+
+    def __init__(self,
+                 win,
+                 image=None,
+                 mask=None,
+                 units="",
+                 pos=(0.0, 0.0),
+                 size=None,
+                 ori=0.0,
+                 color=(1.0, 1.0, 1.0),
+                 colorSpace='rgb',
+                 contrast=1.0,
+                 opacity=1.0,
+                 depth=0,
+                 interpolate=False,
+                 flipHoriz=False,
+                 flipVert=False,
+                 texRes=128,
+                 name='',
+                 autoLog=True,
+                 maskParams=None):
+        
+        if image is None or type(image) != np.ndarray:
+            raise ValueError(
+                'ImageStimNumpyuByte must be numpy.ubyte ndarray (0-255)')
+
+        self.interpolate = interpolate
+
+        # convert incoming Uint to RGB trio only during initialization to keep PsychoPy happy
+        # else, error is: ERROR   numpy arrays used as textures should be in
+        # the range -1(black):1(white)
+        data = np.zeros((image.shape[0], image.shape[1], 3), np.float32)
+        # (0 to 255) -> (-1 to +1)
+        fimage = image.astype(np.float32) / 255 * 2.0 - 1.0
+        data[:, :, 0] = fimage[: , :, 0]#R
+        data[:, :, 1] = fimage[: , :, 1]#R
+        data[:, :, 2] = fimage[: , :, 2]#R
+
+        visual.ImageStim.__init__(self,
+                                  win,
+                                  image=data,
+                                  mask=mask,
+                                  units=units,
+                                  pos=pos,
+                                  size=size,
+                                  ori=ori,
+                                  contrast=contrast,
+                                  opacity=opacity,
+                                  depth=depth,
+                                  interpolate=interpolate,
+                                  flipHoriz=flipHoriz,
+                                  flipVert=flipVert,
+                                  texRes=texRes,
+                                  name=name, autoLog=autoLog,
+                                  maskParams=maskParams)
+
+        self.setImage = self.setReplaceImage
+        self.setImage(image)
+
+    def setReplaceImage(self, tex):
+            '''
+            Use this function instead of 'setImage' to bypass format conversions
+            and increase movie playback rates.
+            '''
+            #intensity = tex.astype(numpy.ubyte)
+            intensity = tex
+            internalFormat = GL.GL_RGB
+            pixFormat = GL.GL_RGB
+            dataType = GL.GL_UNSIGNED_BYTE
+            # data = numpy.ones((intensity.shape[0],intensity.shape[1],3),numpy.ubyte)#initialise data array as a float
+            # data[:,:,0] = intensity#R
+            # data[:,:,1] = intensity#G
+            # data[:,:,2] = intensity#B
+            data = intensity
+            texture = tex.ctypes  # serialise
+            try:
+                tid = self._texID  # psychopy renamed this at some point.
+            except AttributeError:
+                tid = self.texID
+            GL.glEnable(GL.GL_TEXTURE_2D)
+            GL.glBindTexture(GL.GL_TEXTURE_2D, tid)
+            # makes the texture map wrap (this is actually default anyway)
+            if self.interpolate:
+                interpolation = GL.GL_LINEAR
+            else:
+                interpolation = GL.GL_NEAREST
+            GL.glTexParameteri(GL.GL_TEXTURE_2D,
+                            GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D,
+                            GL.GL_TEXTURE_MAG_FILTER, interpolation)
+            GL.glTexParameteri(GL.GL_TEXTURE_2D,
+                            GL.GL_TEXTURE_MIN_FILTER, interpolation)
+            GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, internalFormat,
+                            # [JRG] for non-square, want data.shape[1], data.shape[0]
+                            data.shape[1], data.shape[0], 0,
+                            pixFormat, dataType, texture)
+            pass
+    
+class ColorMovieStim(MovieStim):
+    """
+    A movie stimulus designed for playing Numpy uint8 movies of arbitrary
+        size/resolution.
+    """
+    def __init__(self,
+                 movie_path,
+                 window,
+                 frame_length,
+                 size=(640,480),
+                 pos=(0,0),
+                 start_time=0.0,
+                 stop_time=None,
+                 blank_length=0,
+                 blank_sweeps=0,
+                 runs=1,
+                 shuffle=False,
+                 fps=60.0,
+                 flip_v=False,
+                 flip_h=False,
+                 interpolate=False,
+                 ):
+
+        self.movie_path = movie_path
+        self.frame_length = frame_length
+
+        movie_data = self.load_movie(movie_path)
+
+        psychopy_stimulus = ColorImageStimNumpyuByte(window,
+                                                image=movie_data[0],
+                                                size=size,
+                                                pos=pos,
+                                                units='pix',
+                                                flipVert=flip_v,
+                                                flipHoriz=flip_h,
+                                                interpolate=interpolate)
+        sweep_params = {
+            'ReplaceImage': (movie_data, 0),
+        }
+        super(MovieStim, self).__init__(psychopy_stimulus,
+                                        sweep_params,
+                                        sweep_length=frame_length,
+                                        start_time=start_time,
+                                        stop_time=stop_time,
+                                        blank_length=blank_length,
+                                        blank_sweeps=blank_sweeps,
+                                        runs=runs,
+                                        shuffle=shuffle,
+                                        fps=fps,
+                                        save_sweep_table=False)
+    def load_movie(self, path):
+        """
+        Loads a movie from a specified path.  Currently only supports .npy files.
+        """
+        if path[-3:] == "npy":
+            return self.load_numpy_movie(path)
+        else:
+            raise IOError("Incorrect movie file type.")
+
+    def load_numpy_movie(self, path):
+        """
+        Loads a numpy movie.  Ensures that it is read as a contiguous array and
+            three dimensional.
+        """
+        self.movie_local_path = self._local_copy(path)
+        movie_data = np.ascontiguousarray(np.load(self.movie_local_path))
+
+        # check shape/type
+        if not movie_data.dtype in [np.uint8, np.ubyte]:
+            raise ValueError("Movie must be dtype numpy.uint8")
+
+        return movie_data
+
 def make_movie_stimulus(movie_paths, window, repeats):
     """Generate a Stimulus that plays a series of movie clips in a specified order."""
 
@@ -19,6 +200,7 @@ def make_movie_stimulus(movie_paths, window, repeats):
     counter = 0
     
     for local_path in movie_paths:
+        print("Loading {}".format(local_path))
         local_movie = np.load(local_path)
         array_size = local_movie.shape
 
@@ -27,13 +209,24 @@ def make_movie_stimulus(movie_paths, window, repeats):
         end_time = current_time + array_size[0]*repeats[counter] / 60.0
 
         # You can change the runs parameter to change the number of times the movie clip is played.
-        s = MovieStim(movie_path=local_path,
+        # We use the MoieStim class to create the stimulus except we use the ColorMovieStim class
+        # instead of the MovieStim class for the last 2 movies.
+        if 'green' in local_path or 'disco' in local_path:
+            s = ColorMovieStim(movie_path=local_path,
                         window=window,
                         frame_length=1.0 / 60.0,
                         size=(1920, 1080),
                         start_time=0.0,
                         stop_time=None,
                         flip_v=True, runs=repeats[counter])
+        else:
+            s = MovieStim(movie_path=local_path,
+                            window=window,
+                            frame_length=1.0 / 60.0,
+                            size=(1920, 1080),
+                            start_time=0.0,
+                            stop_time=None,
+                            flip_v=True, runs=repeats[counter])
         s.set_display_sequence([(current_time, end_time)])
 
         # Added to facilitate creating the NWB files
