@@ -12,6 +12,192 @@ from psychopy import visual
 import pyglet
 GL = pyglet.gl
 
+
+"""
+runs optotagging code for ecephys pipeline experiments
+by joshs@alleninstitute.org, corbettb@alleninstitute.org, chrism@alleninstitute.org, jeromel@alleninstitute.org
+
+(c) 2018 Allen Institute for Brain Science
+"""
+import datetime
+import pickle as pkl
+from copy import deepcopy
+
+def run_optotagging(levels, conditions, waveforms, isis, sampleRate = 10000.):
+
+    from toolbox.IO.nidaq import AnalogOutput
+    from toolbox.IO.nidaq import DigitalOutput
+
+    sweep_on = np.array([0,0,1,0,0,0,0,0], dtype=np.uint8)
+    stim_on = np.array([0,0,1,1,0,0,0,0], dtype=np.uint8)
+    stim_off = np.array([0,0,1,0,0,0,0,0], dtype=np.uint8)
+    sweep_off = np.array([0,0,0,0,0,0,0,0], dtype=np.uint8)
+
+    ao = AnalogOutput('Dev1', channels=[1])
+    ao.cfg_sample_clock(sampleRate)
+
+    do = DigitalOutput('Dev1', 2)
+
+    do.start()
+    ao.start()
+
+    do.write(sweep_on)
+    time.sleep(5)
+
+    for i, level in enumerate(levels):
+
+        print(level)
+
+        data = waveforms[conditions[i]]
+
+        do.write(stim_on)
+        ao.write(data * level)
+        do.write(stim_off)
+        time.sleep(isis[i])
+
+    do.write(sweep_off)
+    do.clear()
+    ao.clear()
+
+def generatePulseTrain(pulseWidth, pulseInterval, numRepeats, riseTime, sampleRate = 10000.):
+
+    data = np.zeros((int(sampleRate),), dtype=np.float64)
+   # rise_samples =
+
+    rise_and_fall = (((1 - np.cos(np.arange(sampleRate*riseTime/1000., dtype=np.float64)*2*np.pi/10))+1)-1)/2
+    half_length = int(rise_and_fall.size / 2)
+    rise = rise_and_fall[:half_length]
+    fall = rise_and_fall[half_length:]
+
+    peak_samples = int(sampleRate*(pulseWidth-riseTime*2)/1000)
+    peak = np.ones((peak_samples,))
+
+    pulse = np.concatenate((rise, \
+                           peak, \
+                           fall))
+
+    interval = int(pulseInterval*sampleRate/1000.)
+
+    for i in range(0, numRepeats):
+        data[i*interval:i*interval+pulse.size] = pulse
+
+    return data
+
+def optotagging(mouse_id, operation_mode='experiment', level_list = [1.15, 1.28, 1.345], output_dir = 'C:/ProgramData/camstim/output/'):
+
+    sampleRate = 10000
+
+    # 1 s cosine ramp:
+    data_cosine = (((1 - np.cos(np.arange(sampleRate, dtype=np.float64)
+                                * 2*np.pi/sampleRate)) + 1) - 1)/2  # create raised cosine waveform
+
+    # 1 ms cosine ramp:
+    rise_and_fall = (
+        ((1 - np.cos(np.arange(sampleRate*0.001, dtype=np.float64)*2*np.pi/10))+1)-1)/2
+    half_length = int(rise_and_fall.size / 2)
+
+    # pulses with cosine ramp:
+    pulse_2ms = np.concatenate((rise_and_fall[:half_length], np.ones(
+        (int(sampleRate*0.001),)), rise_and_fall[half_length:]))
+    pulse_5ms = np.concatenate((rise_and_fall[:half_length], np.ones(
+        (int(sampleRate*0.004),)), rise_and_fall[half_length:]))
+    pulse_10ms = np.concatenate((rise_and_fall[:half_length], np.ones(
+        (int(sampleRate*0.009),)), rise_and_fall[half_length:]))
+
+    data_2ms_10Hz = np.zeros((sampleRate,), dtype=np.float64)
+
+    for i in range(0, 10):
+        interval = int(sampleRate / 10)
+        data_2ms_10Hz[i*interval:i*interval+pulse_2ms.size] = pulse_2ms
+
+    data_5ms = np.zeros((sampleRate,), dtype=np.float64)
+    data_5ms[:pulse_5ms.size] = pulse_5ms
+
+    data_10ms = np.zeros((sampleRate,), dtype=np.float64)
+    data_10ms[:pulse_10ms.size] = pulse_10ms
+
+    data_10s = np.zeros((sampleRate*10,), dtype=np.float64)
+    data_10s[:-2] = 1
+
+    ##### THESE STIMULI ADDED FOR OPENSCOPE GLO PROJECT #####
+    data_10ms_5Hz = generatePulseTrain(10, 200, 5, 1) # 1 second of 5Hz pulse train. Each pulse is 10 ms wide
+    data_6ms_40Hz = generatePulseTrain(6, 25, 40, 1)  # 1 second of 40 Hz pulse train. Each pulse is 6 ms wide
+    #########################################################
+
+    # for experiment
+
+    isi = 1.5
+    isi_rand = 0.5
+    numRepeats = 50
+
+    condition_list = [3, 4, 5]
+    waveforms = [data_2ms_10Hz, data_5ms, data_10ms, data_cosine, data_10ms_5Hz, data_6ms_40Hz]
+
+    opto_levels = np.array(level_list*numRepeats*len(condition_list)) #     BLUE
+    opto_conditions = condition_list*numRepeats*len(level_list)
+    opto_conditions = np.sort(opto_conditions)
+    opto_isis = np.random.random(opto_levels.shape) * isi_rand + isi
+
+    p = np.random.permutation(len(opto_levels))
+
+    # implement shuffle?
+    opto_levels = opto_levels[p]
+    opto_conditions = opto_conditions[p]
+
+    # for testing
+
+    if operation_mode=='test_levels':
+        isi = 2.0
+        isi_rand = 0.0
+
+        numRepeats = 2
+
+        condition_list = [0]
+        waveforms = [data_10s, data_10s]
+
+        opto_levels = np.array(level_list*numRepeats*len(condition_list)) #     BLUE
+        opto_conditions = condition_list*numRepeats*len(level_list)
+        opto_conditions = np.sort(opto_conditions)
+        opto_isis = np.random.random(opto_levels.shape) * isi_rand + isi
+
+    elif operation_mode=='pretest':
+        numRepeats = 1
+
+        condition_list = [0]
+        data_2s = data_10s[-sampleRate*2:]
+        waveforms = [data_2s]
+
+        opto_levels = np.array(level_list*numRepeats*len(condition_list)) #     BLUE
+        opto_conditions = condition_list*numRepeats*len(level_list)
+        opto_conditions = np.sort(opto_conditions)
+        opto_isis = [1]*len(opto_conditions)
+    #
+
+    outputDirectory = output_dir
+    fileDate = str(datetime.datetime.now()).replace(':', '').replace(
+        '.', '').replace('-', '').replace(' ', '')[2:14]
+    fileName = os.path.join(outputDirectory, fileDate + '_'+mouse_id + '.opto.pkl')
+
+    print('saving info to: ' + fileName)
+    fl = open(fileName, 'wb')
+    output = {}
+
+    output['opto_levels'] = opto_levels
+    output['opto_conditions'] = opto_conditions
+    output['opto_ISIs'] = opto_isis
+    output['opto_waveforms'] = waveforms
+
+    pkl.dump(output, fl)
+    fl.close()
+    print('saved.')
+
+    #
+    run_optotagging(opto_levels, opto_conditions,
+                    waveforms, opto_isis, float(sampleRate))
+"""
+end of optotagging section
+"""
+
 class ColorImageStimNumpyuByte(ImageStimNumpyuByte):
 
     '''Subclass of ImageStim which allows fast updates of numpy ubyte images,
@@ -188,6 +374,40 @@ class ColorMovieStim(MovieStim):
 
         return movie_data
 
+def create_receptive_field_mapping(window, number_runs = 15):
+    x = np.arange(-40,45,10)
+    y = np.arange(-40,45,10)
+    position = []
+    for i in x:
+        for j in y:
+            position.append([i,j])
+
+    stimulus = Stimulus(visual.GratingStim(window,
+                        units='deg',
+                        size=20,
+                        mask="circle",
+                        texRes=256,
+                        sf=0.1,
+                        ),
+        sweep_params={
+                'Pos':(position, 0),
+                'Contrast': ([0.8], 4),
+                'TF': ([4.0], 1),
+                'SF': ([0.08], 2),
+                'Ori': ([0,45,90], 3),
+                },
+        sweep_length=0.25,
+        start_time=0.0,
+        blank_length=0.0,
+        blank_sweeps=0,
+        runs=number_runs,
+        shuffle=True,
+        save_sweep_table=True,
+        )
+    stimulus.stim_path = r"C:\\not_a_stim_script\\receptive_field_block.stim"
+
+    return stimulus
+
 def make_movie_stimulus(movie_paths, window, repeats):
     """Generate a Stimulus that plays a series of movie clips in a specified order."""
 
@@ -236,24 +456,7 @@ def make_movie_stimulus(movie_paths, window, repeats):
         stims.append(s)
         current_time = end_time
 
-    # Note that pre_blank_sec and post_blank_sec are set to 0.0 by default.
-    # You can change these parameters to add a blank period before and after the movie clip. 
-    stim = SweepStim(window,
-                     stimuli=stims,
-                     # pre_blank_sec=1,
-                     # post_blank_sec=1,
-                     params={},
-                     )
-
-    # add in foraging so we can track wheel, potentially give rewards, etc
-    f = Foraging(window = window,
-                    auto_update = False,
-                    params= {}
-                    )
-    
-    stim.add_item(f, "foraging")
-
-    return stim
+    return stims, end_time
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("mtrain")
@@ -281,18 +484,23 @@ if __name__ == "__main__":
     # mtrain should be providing : a path to a network folder or a local folder with the entire repo pulled
     SESSION_PARAMS_movie_folder = json_params.get('movie_folder', os.path.abspath("data"))
     
-    # An integer representing the day of the experiment. Defaults to Day 0.
-    SESSION_PARAMS_day = json_params.get('day', 0)
+    # An integer representing the number of repeats. This is used to determine the number of times each movie clip is played.
+    # final number of repeats is the product of the n_repeats and the repeats_array
+    # At production, this should be 10
+    N_REPEATS = json_params.get('n_repeats', 1)
+    ADD_RF = json_params.get('add_rf', True)
+    number_runs_rf = json_params.get('number_runs_rf', 1) # 8 is the number of repeats for prod(8min).
 
     # mtrain should be providing : Gamma1.Luminance50
     monitor_name = json_params.get('monitor_name', "testMonitor")
+    opto_disabled = json_params.get('disable_opto', True)
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = [100,20,100,100,50,100,100,50,50,50,50]
+    repeats_array = N_REPEATS*[10,2,10,10,5,10,10,5,5,5,5]
     movie_clip_files = ['LRRL_2_thin_bar.npy', 'LRRL_10_thick_bar.npy',
                         'right_left_speed_2.0.npy', 'LRRL_2_thick_bar.npy',
-                       'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy','curl_cw.npy','curl_acw.npy',
+                       'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy', 'curl_cw.npy','curl_acw.npy',
                        'CLRRL_2_green_green.npy','CLRRL_2_disco_disco.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
@@ -314,6 +522,53 @@ if __name__ == "__main__":
                     warp=Warp.Spherical
                     )
 
-    ss = make_movie_stimulus(movie_clip_files, window ,repeats_array)
+    stims, end_time = make_movie_stimulus(movie_clip_files, window, repeats_array)
 
-    ss.run()
+    if ADD_RF:
+        gabors_rf_20  = create_receptive_field_mapping(window, number_runs_rf)
+        gabors_rf_20_ds = [(end_time, end_time+60*number_runs_rf)]
+        gabors_rf_20.set_display_sequence(gabors_rf_20_ds)
+        stims.append(gabors_rf_20)    
+        
+        end_time = end_time+60*number_runs_rf
+
+    logging.info("Stimulus end at : %f min", (end_time)/60)
+
+    # Note that pre_blank_sec and post_blank_sec are set to 0.0 by default.
+    # You can change these parameters to add a blank period before and after the movie clip. 
+    ss = SweepStim(window,
+                     stimuli=stims,
+                     # pre_blank_sec=1,
+                     # post_blank_sec=1,
+                     params={},
+                     )
+
+    # add in foraging so we can track wheel, potentially give rewards, etc
+    f = Foraging(window = window,
+                    auto_update = False,
+                    params= {}
+                    )
+    
+    ss.add_item(f, "foraging")
+
+    # run it
+    try:
+        ss.run()
+    except SystemExit:
+        print("We prevent camstim exiting the script to complete optotagging")
+
+    if not(opto_disabled):
+        from camstim.misc import get_config
+        from camstim.zro import agent
+        opto_params = deepcopy(json_params.get("opto_params"))
+        opto_params["mouse_id"] = json_params["mouse_id"]
+        opto_params["output_dir"] = agent.OUTPUT_DIR
+        #Read opto levels from stim.cfg file
+        config_path = agent.CAMSTIM_CONFIG_PATH
+        stim_cfg_opto_params = get_config(
+            'Optogenetics',
+            path=config_path,
+        )
+        opto_params["level_list"] = stim_cfg_opto_params["level_list"]
+
+        optotagging(**opto_params)
