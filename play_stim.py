@@ -349,8 +349,7 @@ class ColorMovieStim(MovieStim):
                                         blank_sweeps=blank_sweeps,
                                         runs=runs,
                                         shuffle=shuffle,
-                                        fps=fps,
-                                        save_sweep_table=False)
+                                        fps=fps)
     def load_movie(self, path):
         """
         Loads a movie from a specified path.  Currently only supports .npy files.
@@ -487,7 +486,7 @@ if __name__ == "__main__":
     # An integer representing the number of repeats. This is used to determine the number of times each movie clip is played.
     # final number of repeats is the product of the n_repeats and the repeats_array
     # At production, this should be 10
-    N_REPEATS = json_params.get('n_repeats', 1)
+    N_REPEATS = json_params.get('n_repeats', 5)
     ADD_RF = json_params.get('add_rf', True)
     number_runs_rf = json_params.get('number_runs_rf', 1) # 8 is the number of repeats for prod(8min).
 
@@ -497,7 +496,7 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*[2,1,1,1,1,2,2,1,2,2,1,2,1,1,1,1,1]
+    repeats_array = N_REPEATS*np.array([2,1,1,1,1,2,2,1,2,2,1,2,1,1,1,1,1])
     movie_clip_files = ['LRRL_2_thin_bar.npy', 'LRRL_10_thin_bar.npy',
                     'left_right_speed_2.0.npy', 'LRRL_2_thick_bar.npy','LRRL_2_thin_bar_flippedContrast.npy',
                     'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy',
