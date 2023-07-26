@@ -378,11 +378,11 @@ def create_receptive_field_mapping(window, number_runs = 15, ShuffleBoolean = Tr
     y = np.arange(-40,45,10)
     position = []
     for i in x:
-	for j in y:
-	    if ((i/10)%2)==1:
-                position.append([i,j])
-	    if ((i/10)%2)==0:
-                position.append([i,-j])
+        for j in y:
+            if ((i/10)%2)==1:
+                    position.append([i,j])
+            if ((i/10)%2)==0:
+                    position.append([i,-j])
 
     stimulus = Stimulus(visual.GratingStim(window,
                         units='deg',
@@ -537,10 +537,10 @@ if __name__ == "__main__":
 
         end_time = end_time+60*number_runs_rf
 
-        gabors_rf_20  = create_receptive_field_mapping(window, number_runs_rf, False)
-        gabors_rf_20_ds = [(end_time, end_time+60*number_runs_rf)]
-        gabors_rf_20.set_display_sequence(gabors_rf_20_ds)
-        stims.append(gabors_rf_20)    
+        gabors_rf_20_unshuffled  = create_receptive_field_mapping(window, number_runs_rf, False)
+        gabors_rf_20_ds_unshuffled = [(end_time, end_time+60*number_runs_rf)]
+        gabors_rf_20_unshuffled.set_display_sequence(gabors_rf_20_ds_unshuffled)
+        stims.append(gabors_rf_20_unshuffled)    
         
         end_time = end_time+60*number_runs_rf
 
