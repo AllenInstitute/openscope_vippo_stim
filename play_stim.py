@@ -373,13 +373,16 @@ class ColorMovieStim(MovieStim):
 
         return movie_data
 
-def create_receptive_field_mapping(window, number_runs = 15):
+def create_receptive_field_mapping(window, number_runs = 15, ShuffleBoolean = True):
     x = np.arange(-40,45,10)
     y = np.arange(-40,45,10)
     position = []
     for i in x:
-        for j in y:
-            position.append([i,j])
+	for j in y:
+	    if ((i/10)%2)==1:
+                position.append([i,j])
+	    if ((i/10)%2)==0:
+                position.append([i,-j])
 
     stimulus = Stimulus(visual.GratingStim(window,
                         units='deg',
@@ -400,7 +403,7 @@ def create_receptive_field_mapping(window, number_runs = 15):
         blank_length=0.0,
         blank_sweeps=0,
         runs=number_runs,
-        shuffle=True,
+        shuffle=ShuffleBoolean,
         save_sweep_table=True,
         )
     stimulus.stim_path = r"C:\\not_a_stim_script\\receptive_field_block.stim"
@@ -496,7 +499,7 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([2,1,1,1,1,2,2,1,2,2,1,2,1,1,1,1,1])
+    repeats_array = N_REPEATS*np.array([2,1,1,1,1,2,2,1,1,1,1,2,1,1,1,1,1])
     movie_clip_files = ['LRRL_2_thin_bar.npy', 'LRRL_10_thin_bar.npy',
                     'left_right_speed_2.0.npy', 'LRRL_2_thick_bar.npy','LRRL_2_thin_bar_flippedContrast.npy',
                     'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy',
@@ -527,7 +530,14 @@ if __name__ == "__main__":
     stims, end_time = make_movie_stimulus(movie_clip_files, window, repeats_array)
 
     if ADD_RF:
-        gabors_rf_20  = create_receptive_field_mapping(window, number_runs_rf)
+        gabors_rf_20  = create_receptive_field_mapping(window, number_runs_rf, True)
+        gabors_rf_20_ds = [(end_time, end_time+60*number_runs_rf)]
+        gabors_rf_20.set_display_sequence(gabors_rf_20_ds)
+        stims.append(gabors_rf_20)    
+
+        end_time = end_time+60*number_runs_rf
+
+        gabors_rf_20  = create_receptive_field_mapping(window, number_runs_rf, False)
         gabors_rf_20_ds = [(end_time, end_time+60*number_runs_rf)]
         gabors_rf_20.set_display_sequence(gabors_rf_20_ds)
         stims.append(gabors_rf_20)    
