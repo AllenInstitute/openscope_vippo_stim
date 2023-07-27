@@ -349,7 +349,9 @@ class ColorMovieStim(MovieStim):
                                         blank_sweeps=blank_sweeps,
                                         runs=runs,
                                         shuffle=shuffle,
-                                        fps=fps)
+                                        fps=fps,
+                                        save_sweep_table=False)
+                                        
     def load_movie(self, path):
         """
         Loads a movie from a specified path.  Currently only supports .npy files.
@@ -440,7 +442,8 @@ def make_movie_stimulus(movie_paths, window, repeats):
                         size=(1920, 1080),
                         start_time=0.0,
                         stop_time=None,
-                        flip_v=True, runs=repeats[counter])
+                        flip_v=True, runs=repeats[counter]
+                        )
         else:
             s = MovieStim(movie_path=local_path,
                             window=window,
@@ -489,7 +492,7 @@ if __name__ == "__main__":
     # An integer representing the number of repeats. This is used to determine the number of times each movie clip is played.
     # final number of repeats is the product of the n_repeats and the repeats_array
     # At production, this should be 10
-    N_REPEATS = json_params.get('n_repeats', 5)
+    N_REPEATS = json_params.get('n_repeats', 1)
     ADD_RF = json_params.get('add_rf', True)
     number_runs_rf = json_params.get('number_runs_rf', 1) # 8 is the number of repeats for prod(8min).
 
