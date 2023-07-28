@@ -435,7 +435,7 @@ def make_movie_stimulus(movie_paths, window, repeats):
         # You can change the runs parameter to change the number of times the movie clip is played.
         # We use the MoieStim class to create the stimulus except we use the ColorMovieStim class
         # instead of the MovieStim class for the last 2 movies.
-        if 'green' in local_path or 'disco' in local_path or 'natmovie' in local_path:
+        if 'Green' in local_path or 'Disco' in local_path or 'natmovie' in local_path:
             s = ColorMovieStim(movie_path=local_path,
                         window=window,
                         frame_length=1.0 / 60.0,
@@ -502,14 +502,24 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([2,1,1,1,1,2,2,1,1,1,1,2,1,1,1,1,1])
-    movie_clip_files = ['LRRL_2_thin_bar.npy', 'LRRL_10_thin_bar.npy',
-                    'left_right_speed_2.0.npy', 'LRRL_2_thick_bar.npy','LRRL_2_thin_bar_flippedContrast.npy',
-                    'UDDU_2_thin_bar.npy','ERCR.npy','div_3.npy',
-                    'curl_cw_July20.npy','curl_acw_July20.npy',
-                    'CLRRL_2_green_green.npy','CLRRL_2_disco_disco.npy',
-                    'natmovie_EagleSwooping1_480x270.npy','natmovie_EagleSwooping2_480x270.npy',
-                    'natmovie_Squirreland3Mice_480x270.npy','natmovie_CricketsOnARock_480x270.npy','natmovie_BlackSnakeSlithering_480x270.npy']
+    repeats_array = N_REPEATS*np.array([2,1,1,1,1,1,2,2,1,1,1,2,2,1,1,1,1,1])
+    movie_clip_files = ['LRRL_Narrow_WhtPil_2secOn_0secOff.npy',
+                        'LRRL_Narrow_WhtPil_8secOn_0secOff.npy' , 
+                        'LRRL_Broad_WhtPil_2secOn_0secOff.npy', 
+                        'LR_Narrow_WhtPil_2secOn_0secOff.npy', 
+                        'LRRL_Narrow_BlkPil_2secOn_0secOff.npy', 
+                        'LRRL_Narrow_WhtPil_2secOn_1secOff.npy', 
+                        'UDDU_Narrow_WhtPil_2secOn_0secOff.npy',
+                        'Ring_2secOn_0secOff.npy','Disk_2secOn_0secOff.npy', 
+                        'curl_CW_2secOn_0secOff.npy', 'curl_CCW_2secOn_0secOff.npy', 
+                        'LRRL_Narrow_Green_2secOn_0secOff.npy', 
+                        'LRRL_Narrow_Disco_2secOn_0secOff.npy', 
+                        'natmovie_EagleSwooping1_central_view.npy', 
+                        'natmovie_EagleSwooping2_central_view.npy', 
+                        'natmovie_CricketsOnARock_central_view.npy',  
+                        'natmovie_Squirreland3Mice_central_view.npy', 
+                        'natmovie_SnakeOnARoad_central_view.npy'
+                        ]
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
