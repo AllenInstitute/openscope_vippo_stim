@@ -48,5 +48,7 @@ The software requires two sets of input files. There should be a set of text fil
 
 
 2. [Clips for stim generation](https://drive.google.com/drive/folders/14B9YlA_-adNRlzoag-XGWW37W226WOFP?usp=sharing)
+3. 7/28/2023 clips with edits such that the bars of light do not vanish from the screen, unless desired
+   https://drive.google.com/file/d/1vGJmQficb5YFm3sxAQGwbFOo5rVQzAwY/view?usp=sharing
 
         
