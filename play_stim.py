@@ -502,24 +502,11 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([2,1,1,1,1,1,2,2,1,1,1,2,2,1,1,1,1,1])
-    movie_clip_files = ['LRRL_Narrow_WhtPil_2secOn_0secOff.npy',
-                        'LRRL_Narrow_WhtPil_8secOn_0secOff.npy' , 
-                        'LRRL_Broad_WhtPil_2secOn_0secOff.npy', 
-                        'LR_Narrow_WhtPil_2secOn_0secOff.npy', 
-                        'LRRL_Narrow_BlkPil_2secOn_0secOff.npy', 
-                        'LRRL_Narrow_WhtPil_2secOn_1secOff.npy', 
-                        'UDDU_Narrow_WhtPil_2secOn_0secOff.npy',
-                        'Ring_2secOn_0secOff.npy','Disk_2secOn_0secOff.npy', 
-                        'curl_CW_2secOn_0secOff.npy', 'curl_CCW_2secOn_0secOff.npy', 
-                        'LRRL_Narrow_Green_2secOn_0secOff.npy', 
-                        'LRRL_Narrow_Disco_2secOn_0secOff.npy', 
-                        'natmovie_EagleSwooping1_central_view.npy', 
-                        'natmovie_EagleSwooping2_central_view.npy', 
-                        'natmovie_CricketsOnARock_central_view.npy',  
-                        'natmovie_Squirreland3Mice_central_view.npy', 
-                        'natmovie_SnakeOnARoad_central_view.npy'
-                        ]
+    repeats_array = N_REPEATS*np.array([1,1,1,1])
+    movie_clip_files = ['CheckeredGridTest_540x960.npy',
+                        'CheckeredGridTest_1080x1920.npy',
+                        'CheckeredGridTest_1200x1920.npy',
+                        'CheckeredGridTest_600x800.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
