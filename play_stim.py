@@ -502,8 +502,8 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([1,1,1,1])
-    movie_clip_files = ['CheckeredGridTest_540x960.npy',
+    repeats_array = N_REPEATS*np.array([1,1,1,1,1])
+    movie_clip_files = ['Checkerednumbers_540x960.npy','CheckeredGridTest_540x960.npy',
                         'CheckeredGridTest_1080x1920.npy',
                         'CheckeredGridTest_1200x1920.npy',
                         'CheckeredGridTest_600x800.npy']
