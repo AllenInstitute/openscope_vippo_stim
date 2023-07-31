@@ -492,7 +492,7 @@ if __name__ == "__main__":
     # An integer representing the number of repeats. This is used to determine the number of times each movie clip is played.
     # final number of repeats is the product of the n_repeats and the repeats_array
     # At production, this should be 10
-    N_REPEATS = json_params.get('n_repeats', 1)
+    N_REPEATS = json_params.get('n_repeats', 5)
     ADD_RF = json_params.get('add_rf', True)
     number_runs_rf = json_params.get('number_runs_rf', 1) # 8 is the number of repeats for prod(8min).
 
@@ -502,11 +502,26 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([1,1,1,1,1])
-    movie_clip_files = ['Checkerednumbers_540x960.npy','CheckeredGridTest_540x960.npy',
-                        'CheckeredGridTest_1080x1920.npy',
-                        'CheckeredGridTest_1200x1920.npy',
-                        'CheckeredGridTest_600x800.npy']
+    repeats_array = N_REPEATS*np.array([2,1,1,1,1,1,1,2,2,1,1,1,1,2,1,1,1,1,1])
+    movie_clip_files = ['SAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'SAC_Wd15_Vel2_Bndry2_Cntst0_loop.npy',
+'SAC_Wd15_Vel2_Bndry3_Cntst0_loop.npy',
+'SAC_Wd15_Vel8_Bndry1_Cntst0_loop.npy',
+'SAC_Wd45_Vel2_Bndry1_Cntst0_loop.npy',    
+'SAC_Wd15_Vel2_Bndry1_Cntst1_loop.npy',    
+'SAC_Wd15_Vel2_Bndry2_Cntst0_oneway.npy',
+'UD_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'Ring_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'Disk_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'curl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
+'acurl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
+'GreenSAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'Disco2SAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'natmovie_CricketsOnARock_540x960Full_584x460Active.npy',
+'natmovie_EagleSwooping1_540x960Full_584x460Active.npy',
+'natmovie_EagleSwooping2_540x960Full_584x460Active.npy',
+'natmovie_SnakeOnARoad_540x960Full_584x460Active.npy',
+'natmovie_Squirreland3Mice_540x960Full_584x460Active.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
