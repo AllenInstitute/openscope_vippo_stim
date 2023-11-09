@@ -52,5 +52,8 @@ The software requires two sets of input files. There should be a set of text fil
    https://drive.google.com/file/d/1vGJmQficb5YFm3sxAQGwbFOo5rVQzAwY/view?usp=sharing
 4. The clips used on 7/28/2023 above had an issue related to warping and screen dimensions. Latest NPY files can be created by the matlab code attached "StimGenerationCode_July30.m". 540x960 npy files are created, but their active region is only the central 584x460. Seems to warp properly
    https://drive.google.com/file/d/1OKfV6Cp71OXX1ki9ZOLn18qhXxj44raN/view?usp=sharing
+   5. A new set of clips, based on 2 pilot mice #072 and 077. 2 new types of stimuli were added, coherent dot motion, and scrambled bar of light. The 5 earlier movie clips were replaced by only 2 clips but of 20seconds each, compared to 4 seconds earlier. The ordering of stimuli was changed on 11/9 such that there are effectively 2 blocks, and the order if stimuli is reversed in the second block. The data folder containing these latest .npy files should be downloaded from
+      https://drive.google.com/file/d/1CYJjxVQ2mn0RfuqADjBIRASNc2m1QRvM/view?usp=drive_link
+      
    
         
