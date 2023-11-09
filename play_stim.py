@@ -502,27 +502,40 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([2,1,1,1,1,1,1,2,2,1,1,1,1,2,1,1,1,1,1])
+    repeats_array = N_REPEATS*np.array([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
     movie_clip_files = ['SAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
-                    'SAC_Wd15_Vel2_Bndry2_Cntst0_loop.npy',
-                    'SAC_Wd15_Vel2_Bndry3_Cntst0_loop.npy',
-                    'SAC_Wd15_Vel8_Bndry1_Cntst0_loop.npy',
-                    'SAC_Wd45_Vel2_Bndry1_Cntst0_loop.npy',    
-                    'SAC_Wd15_Vel2_Bndry1_Cntst1_loop.npy',    
-                    'SAC_Wd15_Vel2_Bndry2_Cntst0_oneway.npy',
-                    'UD_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
-                    'Ring_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
-                    'Disk_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
-                    'curl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
-                    'acurl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
-                    'GreenSAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
-                    'Disco2SAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
-                    'natmovie_CricketsOnARock_540x960Full_584x460Active.npy',
-                    'natmovie_EagleSwooping1_540x960Full_584x460Active.npy',
-                    'natmovie_EagleSwooping2_540x960Full_584x460Active.npy',
-                    'natmovie_SnakeOnARoad_540x960Full_584x460Active.npy',
-                    'natmovie_Squirreland3Mice_540x960Full_584x460Active.npy'
-                    ]
+'SAC_Wd15_Vel2_Bndry3_Cntst0_loop.npy',
+'SAC_Wd45_Vel2_Bndry1_Cntst0_loop.npy',    
+'SAC_Wd15_Vel2_Bndry1_Cntst1_loop.npy',    
+'SAC_Wd15_Vel2_Bndry2_Cntst0_oneway.npy',
+'SAC_Wd15_Vel2_Bndry1_Cntst0_scrambled.npy',
+'DOT_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'SAC_Wd15_Vel8_Bndry1_Cntst0_loop.npy',
+'UD_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'curl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
+'acurl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
+'Ring_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'Disk_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'Disco2SAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'natmovie_20sec_SquirrelMice_540x960Full_584x460Active.npy',
+'natmovie_20sec_EagleSwoop1_540x960Full_584x460Active.npy',
+'natmovie_20sec_EagleSwoop1_540x960Full_584x460Active.npy',
+'natmovie_20sec_SquirrelMice_540x960Full_584x460Active.npy',
+'Disco2SAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'Disk_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'Ring_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'acurl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
+'curl_Wd15_Vel2_Bndry1_Cntst0_oneway.npy',
+'UD_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'SAC_Wd15_Vel8_Bndry1_Cntst0_loop.npy',
+'DOT_Wd15_Vel2_Bndry1_Cntst0_loop.npy',
+'SAC_Wd15_Vel2_Bndry1_Cntst0_scrambled.npy',  
+'SAC_Wd15_Vel2_Bndry2_Cntst0_oneway.npy',
+'SAC_Wd15_Vel2_Bndry1_Cntst1_loop.npy', 
+'SAC_Wd45_Vel2_Bndry1_Cntst0_loop.npy',    
+'SAC_Wd15_Vel2_Bndry3_Cntst0_loop.npy',
+'SAC_Wd15_Vel2_Bndry1_Cntst0_loop.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
