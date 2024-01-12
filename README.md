@@ -57,6 +57,6 @@ The software requires two sets of input files. There should be a set of text fil
       https://drive.google.com/file/d/1CYJjxVQ2mn0RfuqADjBIRASNc2m1QRvM/view?usp=drive_link
 
 6. Jan 11 2024 - Minor modification in the set of clips for bars of light, additional movie based stimuli, based on 2 pilot mice #062-64 and 321. Block structure with reversed order retained as in above, Nov 9 version. Slow bar of light is now 3 times slower, ie 12 seconds per loop. Long-off vanishing at the edges bar of light removed, for time constraints, one-way naso-temporal and temporo-nasal both stimuli now included. For the movies, there is the Eagle swooping 20second clip which gave great prevalence of selectivity in the pilots, and its faster 10sec version is added. Current play_stim and attached files have 2 other variants of the same movie, with obstruction in space and 2 versions with the same movie flipped left to right and up to down. Stimuli were renamed, so that in the future version with 1 trial each kind presentation (montage/"movie grande"), the current order as specified should be used. The data folder containing these latest .npy files should be downloaded from 
-   https://drive.google.com/file/d/16DvN16qRS9oQ_cNDXuVix6RGtmBa3jIz/view?usp=drive_link   
+   https://drive.google.com/drive/folders/1UAI7SUVaPplvTGs8zN9mCWaxcCGjh4rm?usp=drive_link   
    
         
