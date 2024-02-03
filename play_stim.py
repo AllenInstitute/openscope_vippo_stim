@@ -492,9 +492,9 @@ if __name__ == "__main__":
     # An integer representing the number of repeats. This is used to determine the number of times each movie clip is played.
     # final number of repeats is the product of the n_repeats and the repeats_array
     # At production, this should be 10
-    N_REPEATS = json_params.get('n_repeats', 1)
-    ADD_RF = json_params.get('add_rf', True)
-    number_runs_rf = json_params.get('number_runs_rf', 1) # 8 is the number of repeats for prod(8min).
+    N_REPEATS = json_params.get('n_repeats', 5)
+    ADD_RF = json_params.get('add_rf', False)
+    number_runs_rf = json_params.get('number_runs_rf', 8) # 8 is the number of repeats for prod(8min).
 
     # mtrain should be providing : Gamma1.Luminance50
     monitor_name = json_params.get('monitor_name', "testMonitor")
@@ -502,42 +502,8 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
-    movie_clip_files = ['Stim01_SAC_Wd15_Vel2_White_loop.npy',
-'Stim02_SAC_Wd45_Vel2_White_loop.npy',
-'Stim03_SAC_Wd15_Vel2_White_oneway_1.npy',
-'Stim04_SAC_Wd15_Vel2_Black_loop.npy',
-'Stim05_SAC_Wd15_Vel2_White_oneway_2.npy',
-'Stim06_SAC_Wd15_Vel2_White_scramble.npy',
-'Stim07_DOT_Wd15_Vel2_White_loop.npy',
-'Stim08_SAC_Wd15_Vel6_White_loop.npy',
-'Stim09_UD_Wd15_Vel2_White_loop.npy',
-'Stim10_ROT_Wd15_Vel2_White_loop.npy',
-'Stim11_Ring_Wd15_Vel2_White_loop.npy',
-'Stim12_Disk_Wd15_Vel2_White_loop.npy',
-'Stim13_SAC_Wd15_Vel2_Disco_loop.npy',
-'Stim14_natmovie_10secFast_EagleSwoop.npy',
-'Stim15_natmovie_20sec_EagleSwoop.npy',
-'Stim16A_natmovie_20sec_Flipped_A_EagleSwoop.npy',
-'Stim17A_natmovie_20sec_Occluded1to1_A_EagleSwoop.npy',
-'Stim17B_natmovie_20sec_Occluded1to1_B_EagleSwoop.npy',
-'Stim16B_natmovie_20sec_Flipped_B_EagleSwoop.npy',
-'Stim15_natmovie_20sec_EagleSwoop.npy',
-'Stim14_natmovie_10secFast_EagleSwoop.npy',
-'Stim13_SAC_Wd15_Vel2_Disco_loop.npy',
-'Stim12_Disk_Wd15_Vel2_White_loop.npy',
-'Stim11_Ring_Wd15_Vel2_White_loop.npy',
-'Stim10_ROT_Wd15_Vel2_White_loop.npy',
-'Stim09_UD_Wd15_Vel2_White_loop.npy',
-'Stim08_SAC_Wd15_Vel6_White_loop.npy',
-'Stim07_DOT_Wd15_Vel2_White_loop.npy',
-'Stim06_SAC_Wd15_Vel2_White_scramble.npy',
-'Stim05_SAC_Wd15_Vel2_White_oneway_2.npy',
-'Stim04_SAC_Wd15_Vel2_Black_loop.npy',
-'Stim03_SAC_Wd15_Vel2_White_oneway_1.npy',
-'Stim02_SAC_Wd45_Vel2_White_loop.npy',
-'Stim01_SAC_Wd15_Vel2_White_loop.npy',
-]
+    repeats_array = N_REPEATS*np.array([1])
+    movie_clip_files = ['StimMN_natmovie_2Rep_Feb2_2024.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
