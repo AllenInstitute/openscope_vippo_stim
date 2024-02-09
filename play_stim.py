@@ -502,8 +502,8 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([1])
-    movie_clip_files = ['StimMN_natmovie_2Rep_Feb2_2024.npy']
+    repeats_array = N_REPEATS*np.array([1,1,1,1,1])
+    movie_clip_files = ['Stim01_SAC_Wd15_Vel2_White_loop.npy','Stim15_natmovie_20sec_EagleSwoop.npy','StimMN_natmovie_2Rep_Feb2_2024.npy','Stim15_natmovie_20sec_EagleSwoop.npy','Stim01_SAC_Wd15_Vel2_White_loop.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
