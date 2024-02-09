@@ -61,5 +61,6 @@ The software requires two sets of input files. There should be a set of text fil
 
 7. Feb 2 2024 - Major modification, based on the neural responses we saw in early production mice and pilot mice. Many neurons showed mean rate changes between stimuli, specially between bars of light vs Eagle movie. To rule out that this is an effect of long time-scale neural drift/ units moving with respect to the recording probe, we now have a new way of presenting stimuli, which is called "montage". A single montage is 252 seconds long and consists of 2 repeats of each of the stimuli from before, so if the earlier stimuli were A, B C... then a Montage is (AABBCC...). Flips and obstructions are repeated 1 time each in a montage, and this montage is shown again and again in many trials (AABB...Flip1Flip2...)(AABB...Flip1Flip2...)(). The data folder containing this singular .npy file should be downloaded from
    https://drive.google.com/drive/folders/1VAnePYN3UPFIk7BfutvXVbyv87NskeV0?usp=drive_link
+   Update to the same stimuli on 8th Feb 2024 - The Montage is now padded on either side with blocks of stimuli (SAC-left right bar) and (Eagle movie), to enable direct comparison in same cells between block and montage. Maximum total trials which we can get would now be 24 instead of 27.
    
         
