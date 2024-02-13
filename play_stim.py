@@ -492,9 +492,9 @@ if __name__ == "__main__":
     # An integer representing the number of repeats. This is used to determine the number of times each movie clip is played.
     # final number of repeats is the product of the n_repeats and the repeats_array
     # At production, this should be 16
-    N_REPEATS = json_params.get('n_repeats', 16)
+    N_REPEATS = json_params.get('n_repeats', 1)
     ADD_RF = json_params.get('add_rf', True)
-    number_runs_rf = json_params.get('number_runs_rf', 8) # 8 is the number of repeats for prod(8min).
+    number_runs_rf = json_params.get('number_runs_rf', 1) # 8 is the number of repeats for prod(8min).
 
     # mtrain should be providing : Gamma1.Luminance50
     monitor_name = json_params.get('monitor_name', "testMonitor")
