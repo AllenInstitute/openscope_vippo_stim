@@ -62,6 +62,11 @@ The software requires two sets of input files. There should be a set of text fil
 7. Feb 2 2024 - Major modification, based on the neural responses we saw in early production mice and pilot mice. Many neurons showed mean rate changes between stimuli, specially between bars of light vs Eagle movie. To rule out that this is an effect of long time-scale neural drift/ units moving with respect to the recording probe, we now have a new way of presenting stimuli, which is called "montage". A single montage is 252 seconds long and consists of 2 repeats of each of the stimuli from before, so if the earlier stimuli were A, B C... then a Montage is (AABBCC...). Flips and obstructions are repeated 1 time each in a montage, and this montage is shown again and again in many trials (AABB...Flip1Flip2...)(AABB...Flip1Flip2...)(). The data folder containing this singular .npy file should be downloaded from
    https://drive.google.com/drive/folders/1VAnePYN3UPFIk7BfutvXVbyv87NskeV0?usp=drive_link
    Update to the same stimuli on 8th Feb 2024 - The Montage is now padded on either side with blocks of stimuli (SAC-left right bar) and (Eagle movie), to enable direct comparison in same cells between block and montage. Maximum total trials which we can get would now be 24 instead of 27.
+   
 8. Feb 9 2024 - Minor modification from the 2nd Feb version. The montage is now changed to have types of bars of light and 7 variations of the movies (6 types of eagle movie and 1 squirrel movie from earlier comes back, as a comparison). The bars and movies are alternating. This montage is padded on either side with 2 blocks of stimuli, one block of SAC bar, one block of Eagle. The files for this version can be found at -
-  https://drive.google.com/drive/folders/1KttRnoJVMc0YFBxXGMaQ49XzOmQx60zH?usp=sharing   
+  https://drive.google.com/drive/folders/1KttRnoJVMc0YFBxXGMaQ49XzOmQx60zH?usp=sharing
+
+9. Feb 13 2024 - Compared to #8 above, this is a minor modification because the earlier Montage file was too large. Now we have overall the same idea of a mixture of Montage and blocks, but the Eagle movie in the blocks is 10sec, fast version. In the montage, all Variants of the eagle movie only repeat 1 time, whereas the 10sec Fast Eagle movie, and 8 different types of bars of light, all repeat 2 times. N_Repeats should be 16 for correct run time of around 2h 12min. The Montage file is updated, and can be found at -
+    https://drive.google.com/file/d/1X-SawMHG1LnZiDAOPClSkgJYybYOIarD/view?usp=sharing
+
         
