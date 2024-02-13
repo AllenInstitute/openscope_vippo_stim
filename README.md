@@ -67,6 +67,6 @@ The software requires two sets of input files. There should be a set of text fil
   https://drive.google.com/drive/folders/1KttRnoJVMc0YFBxXGMaQ49XzOmQx60zH?usp=sharing
 
 9. Feb 13 2024 - Compared to #8 above, this is a minor modification because the earlier Montage file was too large. Now we have overall the same idea of a mixture of Montage and blocks, but the Eagle movie in the blocks is 10sec, fast version. In the montage, all Variants of the eagle movie only repeat 1 time, whereas the 10sec Fast Eagle movie, and 8 different types of bars of light, all repeat 2 times. N_Repeats should be 16 for correct run time of around 2h 12min. The Montage file is updated, and can be found at -
-    https://drive.google.com/file/d/1X-SawMHG1LnZiDAOPClSkgJYybYOIarD/view?usp=sharing
+    https://drive.google.com/file/d/1X-SawMHG1LnZiDAOPClSkgJYybYOIarD/view?usp=sharing . The 10 second eagle movie is the same as one used previously, but reattached at - https://drive.google.com/file/d/15aRrgtj6A2sSVx-9SpHuofLuwlzibaO1/view?usp=sharing
 
         
