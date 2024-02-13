@@ -491,9 +491,9 @@ if __name__ == "__main__":
     
     # An integer representing the number of repeats. This is used to determine the number of times each movie clip is played.
     # final number of repeats is the product of the n_repeats and the repeats_array
-    # At production, this should be 10
-    N_REPEATS = json_params.get('n_repeats', 1)
-    ADD_RF = json_params.get('add_rf', False)
+    # At production, this should be 16
+    N_REPEATS = json_params.get('n_repeats', 16)
+    ADD_RF = json_params.get('add_rf', True)
     number_runs_rf = json_params.get('number_runs_rf', 8) # 8 is the number of repeats for prod(8min).
 
     # mtrain should be providing : Gamma1.Luminance50
@@ -502,9 +502,8 @@ if __name__ == "__main__":
 
     # Paths to the movie clip files to load.
     # We construct the paths to the movie clips based on the SESSION_PARAMS_movie_folder
-    repeats_array = N_REPEATS*np.array([1,1,1,1,1])
-    movie_clip_files = ['Stim01_SAC_Wd15_Vel2_White_loop.npy','Stim15_natmovie_20sec_EagleSwoop.npy','StimMN_natmovie_2Rep_7Bars7Eagles_Feb8_2024.npy'
-,'Stim15_natmovie_20sec_EagleSwoop.npy','Stim01_SAC_Wd15_Vel2_White_loop.npy']
+    repeats_array = N_REPEATS*np.array([1,1,2,1,1])
+    movie_clip_files = ['Stim01_SAC_Wd15_Vel2_White_loop.npy','Stim19_natmovie_10secFast_EagleSwoop.npy','StimMN_natmovie_8SAC7Eagle_Feb12_2024.npy','Stim19_natmovie_10secFast_EagleSwoop.npy','Stim01_SAC_Wd15_Vel2_White_loop.npy']
     movie_clip_files = [os.path.join(SESSION_PARAMS_movie_folder, f) for f in movie_clip_files]
 
     for clip_path in movie_clip_files:
